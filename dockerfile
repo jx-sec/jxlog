@@ -20,3 +20,4 @@ COPY --from=builder /opt/app/GeoLite2-City.mmdb .
 # EXPOSE 30882
 
 ENTRYPOINT  ["/opt/app/main"]
+
