@@ -12,7 +12,7 @@ import (
 
 
 var (
-	Geodb = GeodbRead()
+	Geodb  *geoip2.Reader
 )
 
 type IpGeo struct{
@@ -24,12 +24,14 @@ type IpGeo struct{
 }
 
 
-func GeodbRead() *geoip2.Reader{
+func GeodbReadInit() error{
 	db, err := geoip2.Open("GeoLite2-City.mmdb")
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return err
 	}
-	return db
+	Geodb = db
+	return err
 }
 
 
@@ -37,14 +39,16 @@ func  GeoPlug (ipa string,db *geoip2.Reader) IpGeo {
 	var ipgeo IpGeo
 	db, err := geoip2.Open("GeoLite2-City.mmdb")
 	if err != nil {
-		log.Fatal(err)
+		return ipgeo
+		log.Println(err)
 	}
 	defer db.Close()
 	// If you are using strings that may be invalid, check that ip is not nil
 	ip := net.ParseIP(ipa)
 	record, err := db.City(ip)
 	if err != nil {
-		log.Fatal(err)
+		return ipgeo
+		log.Println(err)
 	}
 	if record.City.Names["zh-CN"] !=  "" {
 		ipgeo.CityName = record.City.Names["zh-CN"]

@@ -41,7 +41,7 @@ var (
 
 	// TcpServer  = "127.0.0.1"
 	// TcpPort  = "80"
-	
+
 )
 
 type JxLog struct {
@@ -212,7 +212,10 @@ func JxlogHandle(data []byte)  JxLog{
 		log.Print("decode err : ",err)
 	}
 	// log.Print(jxlog)
-	jxlog.IpGeo = parsplug.GeoPlug(jxlog.SrcIP,parsplug.Geodb)
+	if parsplug.Geodb !=nil {
+		jxlog.IpGeo = parsplug.GeoPlug(jxlog.SrcIP,parsplug.Geodb)
+		return jxlog
+	}
 	return jxlog
 }
 
@@ -290,6 +293,11 @@ func (ter TcpCon) Start()() {
 func main() {
 	// JxLog. := parsplug.GeoPlug("81.2.69.142",parsplug.Geodb)
 	// log.Println(ipgeo)
+	err := parsplug.GeodbReadInit()
+	if err != nil {
+		log.Println(parsplug.Geodb)
+		log.Println(err)
+	}
 	t := TcpCon{}
 	t.Start()
 	
