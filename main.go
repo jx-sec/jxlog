@@ -6,14 +6,23 @@ import (
 	"context"
 	"encoding/json"
 	"io"
+
+	// "io"
+
+	// "fmt"
+
+	// "io"
+	"bytes"
 	"log"
 	"net"
-	"time"
 	"os"
+	"time"
+
 	// "strconv"
-	"github.com/mitchellh/mapstructure"
-	"github.com/ClickHouse/clickhouse-go/v2"
 	"jxlog/parsplug"
+
+	"github.com/ClickHouse/clickhouse-go/v2"
+	"github.com/mitchellh/mapstructure"
 )
 
 func getEnv(key, fallback string) string {
@@ -233,23 +242,103 @@ func (c ClickHouse) Sendclickhous(data []byte) error {
 	return batch.Send()
 }
 
-func handleConn(con net.Conn,click *ClickHouse){
-	reader := bufio.NewReader(con)
-	for {
-		data, err := reader.ReadSlice('\n')
-		if err != nil {
-			if err != io.EOF {
-				log.Println(err)
-			} else {
-				break
-			}
-		}
-		// jxlog := JxlogHandle(data)
-		if err := click.Sendclickhous(data); err != nil {
+// func handleConn(con net.Conn,click *ClickHouse){
+//     buf := make([]byte, 4096)
+//     var jsonBuf bytes.Buffer
+//     for {
+//         n, err := con.Read(buf)
+
+//         if n > 0 {
+//             if buf[n-1] == 10 { // 10就是\n的ASCII
+//                 // jsonBuf.Write(buf[:n-1]) // 去掉最后的换行符
+// 				fmt.Println(jsonBuf.String())
+//                 if err := click.Sendclickhous(jsonBuf.Bytes()); err != nil {
+// 					log.Print("send clickhouse err : ", err)
+// 				}
+//                 jsonBuf.Reset() // 重置后用于下一次解析
+//             } else {
+//                 jsonBuf.Write(buf[:n])
+//             }
+//         }
+
+//         if err != nil {
+//             break
+//         }
+//     }
+    
+// }
+func contentConn(jsonBuf []byte,click *ClickHouse) {
+	// for{
+		// log.Println("biof  errr",string(jsonBuf))
+		if err := click.Sendclickhous(jsonBuf); err != nil {
 			log.Print("send clickhouse err : ", err)
 		}
+	// }
+}
+	
+
+func handleConn(con net.Conn,click *ClickHouse)  {
+	reader := bufio.NewReader(con)
+	// reader := bufio.NewReaderSize(con,16)
+	var jsonBuf bytes.Buffer    //buff full 处理
+	for {
+		// data, err := reader.ReadSlice('\n')
+		data,isPrefix, err := reader.ReadLine()
+		if len(data) > 0{
+            jsonBuf.Write(data)
+            if !isPrefix{
+                contentConn(jsonBuf.Bytes(),click)
+                jsonBuf.Reset()
+            }
+        }
+		if err != nil{
+			if err != io.EOF {
+				break
+			}
+            
+        }
+		// jsonBuf.Write(data)
+		// if !isPrefix {
+		// 	contentConn(jsonBuf.Bytes(),click)
+		// 	break
+		// }
+		
+		// log.Println("full ",bufio.ErrBufferFull)
+		// if err == bufio.ErrBufferFull{
+		// 	jsonBuf.Write(data)
+		// 	log.Println("命中full")
+		// 	println(jsonBuf.String())
+		// }
+		// if (err != nil ) && (err != bufio.ErrBufferFull) && (err != io.EOF) {
+		// 	log.Println("命中err",err)
+		// 	break
+		// }else {
+		// 	log.Println("biof  errr",string(jsonBuf.Bytes()))
+		// 	if err := click.Sendclickhous(jsonBuf.Bytes()); err != nil {
+		// 		log.Print("send clickhouse err : ", err)
+		// 	}
+		// 	jsonBuf.Reset()
+		// }
+
+		// if err != nil {
+		// 	if err != io.EOF {
+		// 		log.Println(err)
+		// 	} else {
+		// 		break
+		// 	}
+		// }
+		// jxlog := JxlogHandle(data)
+
+		// log.Println("biof  errr",string(data))
+		// if err := click.Sendclickhous(data); err != nil {
+		// 	log.Print("send clickhouse err : ", err)
+		// }
+		
 		// log.Println("received msg", len(data), "bytes:", string(data))
+		
 	}
+	
+	// return jsonBuf.Bytes()
 }
 
 func (ter TcpCon) Start()() {
@@ -277,7 +366,7 @@ func (ter TcpCon) Start()() {
 				log.Printf("accept temp err: %v", ne)
 				continue
 			}
-
+	
 			log.Printf("accept err: %v", e)
 			return
 		}
