@@ -202,12 +202,13 @@ ORDER BY (toDateTime64(RequestTime,0))
 func JxlogHandle(data []byte)  (JxLog, error) {
 	// var jxlog JxLog_raw
 	var datamap map[string]interface{}
+	var jxlog JxLog
 	err := json.Unmarshal(data, &datamap)
 	if err != nil {
 		log.Print("jxlog unmarshal err : ", err)
-		return nil, err
+		return jxlog, err
 	}
-	var jxlog JxLog
+	
 	config := &mapstructure.DecoderConfig{
 		WeaklyTypedInput: true,
 		Result:           &jxlog,
@@ -215,13 +216,13 @@ func JxlogHandle(data []byte)  (JxLog, error) {
 	decoder, err := mapstructure.NewDecoder(config)
 	if err != nil {
 		log.Print("decode config err :",err)
-		return nil, err
+		return jxlog, err
 	}
 	// log.Print("datamap: ",datamap)
 	err = decoder.Decode(datamap)
 	if err != nil {
 		log.Print("decode err : ",err)
-		return nil, err
+		return jxlog, err
 	} 
 	// log.Print(jxlog)
 	if parsplug.Geodb !=nil {
