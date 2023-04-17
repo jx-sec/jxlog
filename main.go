@@ -199,7 +199,7 @@ ORDER BY (toDateTime64(RequestTime,0))
 	return c
 }
 
-func JxlogHandle(data []byte)  JxLog,error{
+func JxlogHandle(data []byte)  JxLog error{
 	// var jxlog JxLog_raw
 	var datamap map[string]interface{}
 	err := json.Unmarshal(data, &datamap)
