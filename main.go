@@ -206,7 +206,8 @@ func JxlogHandle(data []byte)  (JxLog, error) {
 	err := json.Unmarshal(data, &datamap)
 	if err != nil {
 		log.Print("jxlog unmarshal err : ", err)
-		return jxlog, err
+		break
+// 		return jxlog, err
 	}
 	
 	config := &mapstructure.DecoderConfig{
