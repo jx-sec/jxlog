@@ -199,12 +199,13 @@ ORDER BY (toDateTime64(RequestTime,0))
 	return c
 }
 
-func JxlogHandle(data []byte)  JxLog{
+func JxlogHandle(data []byte)  JxLog,error{
 	// var jxlog JxLog_raw
 	var datamap map[string]interface{}
 	err := json.Unmarshal(data, &datamap)
 	if err != nil {
 		log.Print("jxlog unmarshal err : ", err)
+		return nil,err
 	}
 	var jxlog JxLog
 	config := &mapstructure.DecoderConfig{
@@ -214,22 +215,28 @@ func JxlogHandle(data []byte)  JxLog{
 	decoder, err := mapstructure.NewDecoder(config)
 	if err != nil {
 		log.Print("decode config err :",err)
+		return nil,err
 	}
 	// log.Print("datamap: ",datamap)
 	err = decoder.Decode(datamap)
 	if err != nil {
 		log.Print("decode err : ",err)
+		return nil,err
 	}
 	// log.Print(jxlog)
 	if parsplug.Geodb !=nil {
 		jxlog.IpGeo = parsplug.GeoPlug(jxlog.SrcIP,parsplug.Geodb)
 		return jxlog
 	}
-	return jxlog
+	return jxlog,err
 }
 
 func (c ClickHouse) Sendclickhous(data []byte) error {
-	j := JxlogHandle(data)
+	j,err := JxlogHandle(data)
+	if err != nil {
+		return err
+	}
+	
 	conn := c.conn
 	batch, err := conn.PrepareBatch(context.Background(), "INSERT INTO "+Table)
 	if err != nil {
