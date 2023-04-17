@@ -206,8 +206,7 @@ func JxlogHandle(data []byte)  (JxLog, error) {
 	err := json.Unmarshal(data, &datamap)
 	if err != nil {
 		log.Print("jxlog unmarshal err : ", err)
-		break
-// 		return jxlog, err
+		return jxlog, err
 	}
 	
 	config := &mapstructure.DecoderConfig{
@@ -230,7 +229,7 @@ func JxlogHandle(data []byte)  (JxLog, error) {
 		jxlog.IpGeo = parsplug.GeoPlug(jxlog.SrcIP,parsplug.Geodb)
 		return jxlog, nil
 	}
-	return jxlog, err
+// 	return jxlog, err
 }
 
 func (c ClickHouse) Sendclickhous(data []byte) error {
