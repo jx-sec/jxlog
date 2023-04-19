@@ -292,7 +292,10 @@ func handleConn(con net.Conn,click *ClickHouse)  {
             }
         }
 		if err != nil{
-			if err != io.EOF {
+			if err == io.EOF {
+				break
+			}else{
+				log.Println(err)
 				break
 			}
             
