@@ -238,109 +238,49 @@ func contentConn(jsonBuf []byte,click *ClickHouse) {
 }
 	
 
-func handleConn(con net.Conn,click *ClickHouse)  {
-	defer con.Close()
+func handleConn(con net.Conn, click *ClickHouse) {
+	defer con.Close() // 确保连接被关闭
 	reader := bufio.NewReader(con)
-	// reader := bufio.NewReaderSize(con,16)
-	var jsonBuf bytes.Buffer    //buff full 处理
+	var jsonBuf bytes.Buffer // 使用 bytes.Buffer 替代 []byte 以更高效地处理字符串
+
 	for {
-		// data, err := reader.ReadSlice('\n')
-		data,isPrefix, err := reader.ReadLine()
-		if len(data) > 0{
-            jsonBuf.Write(data)
-            if !isPrefix{
-                contentConn(jsonBuf.Bytes(),click)
-                jsonBuf.Reset()
-            }
-        }
-		if err != nil{
-			if err == io.EOF {
-				break
-			}else{
-				log.Println(err)
-				break
+		line, isPrefix, err := reader.ReadLine()
+		if len(line) > 0 {
+			jsonBuf.Write(line)
+			if !isPrefix {
+				// 当一行被完全读取，处理缓冲区中的数据
+				contentConn(jsonBuf.Bytes(), click)
+				jsonBuf.Reset() // 重置缓冲区
 			}
-            
-        }
-		// jsonBuf.Write(data)
-		// if !isPrefix {
-		// 	contentConn(jsonBuf.Bytes(),click)
-		// 	break
-		// }
-		
-		// log.Println("full ",bufio.ErrBufferFull)
-		// if err == bufio.ErrBufferFull{
-		// 	jsonBuf.Write(data)
-		// 	log.Println("命中full")
-		// 	println(jsonBuf.String())
-		// }
-		// if (err != nil ) && (err != bufio.ErrBufferFull) && (err != io.EOF) {
-		// 	log.Println("命中err",err)
-		// 	break
-		// }else {
-		// 	log.Println("biof  errr",string(jsonBuf.Bytes()))
-		// 	if err := click.Sendclickhous(jsonBuf.Bytes()); err != nil {
-		// 		log.Print("send clickhouse err : ", err)
-		// 	}
-		// 	jsonBuf.Reset()
-		// }
-
-		// if err != nil {
-		// 	if err != io.EOF {
-		// 		log.Println(err)
-		// 	} else {
-		// 		break
-		// 	}
-		// }
-		// jxlog := JxlogHandle(data)
-
-		// log.Println("biof  errr",string(data))
-		// if err := click.Sendclickhous(data); err != nil {
-		// 	log.Print("send clickhouse err : ", err)
-		// }
-		
-		// log.Println("received msg", len(data), "bytes:", string(data))
-		
+		}
+		if err != nil {
+			if err != io.EOF {
+				log.Printf("Error reading from connection: %v", err)
+			}
+			return // 终止循环并关闭连接
+		}
 	}
-	
-	// return jsonBuf.Bytes()
 }
 
-func (ter TcpCon) Start()() {
-	// setLimit()
+func (ter TcpCon) Start() {
 	click := Clickhouse_conn(Clickhouse, Database, Username, Password)
-	tcpcon := TcpServer + ":" + TcpPort
-	ln, err := net.Listen("tcp", tcpcon)
+	listener, err := net.Listen("tcp", TcpServer+":"+TcpPort)
 	if err != nil {
-		panic(err)
-	}else{
-		log.Print("tcp server start ...")
+		log.Fatalf("Failed to start TCP listener: %v", err)
 	}
+	defer listener.Close() // 确保监听器被关闭
 
-	var connections []net.Conn
-	defer func() {
-		for _, conn := range connections {
-			conn.Close()
-		}
-	}()
-
+	log.Printf("TCP server started on %s:%s", TcpServer, TcpPort)
 	for {
-		conn, e := ln.Accept()
-		if e != nil {
-			if ne, ok := e.(net.Error); ok && ne.Temporary() {
-				log.Printf("accept temp err: %v", ne)
+		conn, err := listener.Accept()
+		if err != nil {
+			if netErr, ok := err.(net.Error); ok && netErr.Temporary() {
+				log.Printf("Temporary error accepting connection: %v", netErr)
 				continue
 			}
-	
-			log.Printf("accept err: %v", e)
-			return
+			log.Fatalf("Error accepting connection: %v", err)
 		}
-
-		go handleConn(conn,click)
-		connections = append(connections, conn)
-		if len(connections)%100 == 0 {
-			log.Printf("total number of connections: %v", len(connections))
-		}
+		go handleConn(conn, click) // 使用协程处理新的连接
 	}
 }
 
