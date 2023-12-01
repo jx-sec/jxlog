@@ -185,11 +185,7 @@ func JxlogHandle(data []byte)  JxLog{
 	if err != nil {
 		log.Print("decode err : ",err)
 	}
-	// log.Print(jxlog)
-	if parsplug.Geodb !=nil {
-		jxlog.IpGeo = parsplug.GeoPlug(jxlog.SrcIP,parsplug.Geodb)
-		return jxlog
-	}
+	
 	return jxlog
 }
 
