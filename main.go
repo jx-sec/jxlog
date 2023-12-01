@@ -47,15 +47,15 @@ type JxLog struct {
 	Host                           string  `json:"host,srting" mapstructure:"host"`
 	RequestUuid                    string  `json:"request_uuid,srting" mapstructure:"request_uuid"`
 	WafNodeUUID                    string  `json:"waf_node_uuid,srting" mapstructure:"waf_node_uuid"`
-	BytesSent                      string   `json:"bytes_sent,srting" mapstructure:"bytes_sent"`
-	BytesReceived                  string   `json:"bytes_received,srting" mapstructure:"bytes_received"`
+	BytesSent                      string  `json:"bytes_sent,srting" mapstructure:"bytes_sent"`
+	BytesReceived                  string  `json:"bytes_received,srting" mapstructure:"bytes_received"`
 	UpstreamAddr                   string  `json:"upstream_addr,srting" mapstructure:"upstream_addr"`
-	UpstreamBytesReceived          string   `json:"upstream_bytes_received,srting" mapstructure:"upstream_bytes_received"`
-	UpstreamResponseTime           string `json:"upstream_response_time,srting" mapstructure:"upstream_response_time"`
-	UpstreamBytesSent              string   `json:"upstream_bytes_sent,srting" mapstructure:"upstream_bytes_sent"`
+	UpstreamBytesReceived          string  `json:"upstream_bytes_received,srting" mapstructure:"upstream_bytes_received"`
+	UpstreamResponseTime           string  `json:"upstream_response_time,srting" mapstructure:"upstream_response_time"`
+	UpstreamBytesSent              string  `json:"upstream_bytes_sent,srting" mapstructure:"upstream_bytes_sent"`
 	UpstreamStatus                 string  `json:"upstream_status,srting" mapstructure:"upstream_status"`
-	Status                         string   `json:"status,srting" mapstructure:"status"`
-	ProcessTime                    float64 `json:"process_time,srting" mapstructure:"process_time"`
+	Status                         string  `json:"status,srting" mapstructure:"status"`
+	ProcessTime                    string  `json:"process_time,srting" mapstructure:"process_time"`
 	RequestTime                    string  `json:"request_time,srting" mapstructure:"request_time"`
 	RawHeaders                     string  `json:"raw_headers,srting" mapstructure:"raw_headers"`
 	Scheme                         string  `json:"scheme,srting" mapstructure:"scheme"`
@@ -66,7 +66,7 @@ type JxLog struct {
 	RawBody                        string  `json:"raw_body,srting" mapstructure:"raw_body"`
 	SrcIP                          string  `json:"src_ip,srting" mapstructure:"src_ip"`
 	UserAgent                      string  `json:"user_agent,srting" mapstructure:"user_agent"`
-	ContentLength                  string   `json:"content_length,srting" mapstructure:"content_length"`
+	ContentLength                  string  `json:"content_length,srting" mapstructure:"content_length"`
 	Cookie                         string  `json:"cookie,srting" mapstructure:"cookie"`
 	Referer                        string  `json:"referer,srting" mapstructure:"referer"`
 	ContentType                    string  `json:"content_type,srting" mapstructure:"content_type"`
