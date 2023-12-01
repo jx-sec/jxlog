@@ -100,7 +100,7 @@ CREATE TABLE  IF NOT EXISTS ` + Table + `   (
 	UpstreamBytesReceived String,
 	UpstreamResponseTime String,
 	UpstreamBytesSent String,
-	UpstreamStatus Float64,
+	UpstreamStatus String,
 	Status String,
 	ProcessTime String,
 	RequestTime String,
@@ -239,6 +239,7 @@ func contentConn(jsonBuf []byte,click *ClickHouse) {
 	
 
 func handleConn(con net.Conn,click *ClickHouse)  {
+	defer con.Close()
 	reader := bufio.NewReader(con)
 	// reader := bufio.NewReaderSize(con,16)
 	var jsonBuf bytes.Buffer    //buff full 处理
