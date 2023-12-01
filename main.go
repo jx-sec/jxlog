@@ -6,21 +6,11 @@ import (
 	"context"
 	"encoding/json"
 	"io"
-
-	// "io"
-
-	// "fmt"
-
-	// "io"
 	"bytes"
 	"log"
 	"net"
 	"os"
 	"time"
-
-	// "strconv"
-	"jxlog/parsplug"
-
 	"github.com/ClickHouse/clickhouse-go/v2"
 	"github.com/mitchellh/mapstructure"
 )
@@ -54,51 +44,40 @@ var (
 )
 
 type JxLog struct {
-	BytesReceived                  string   `json:"bytes_received,srting" mapstructure:"bytes_received"`
-	BytesSent                      string   `json:"bytes_sent,srting" mapstructure:"bytes_sent"`
-	ConnectionsActive              string   `json:"connections_active,srting" mapstructure:"connections_active"`
-	ConnectionsWaiting             string   `json:"connections_waiting,srting" mapstructure:"connections_waiting"`
-	ContentLength                  string   `json:"content_length,srting" mapstructure:"content_length"`
-	ContentType                    string  `json:"content_type,srting" mapstructure:"content_type"`
-	Cookie                         string  `json:"cookie,srting" mapstructure:"cookie"`
 	Host                           string  `json:"host,srting" mapstructure:"host"`
-	Method                         string  `json:"method,srting" mapstructure:"method"`
-	ProcessTime                    float64 `json:"process_time,srting" mapstructure:"process_time"`
-	QueryString                    string  `json:"query_string,srting" mapstructure:"query_string"`
-	RawBody                        string  `json:"raw_body,srting" mapstructure:"raw_body"`
-	RawHeaders                     string  `json:"raw_headers,srting" mapstructure:"raw_headers"`
-	UserAgent                      string  `json:"user-agent,srting" mapstructure:"user-agent"`
-	Accept                         string  `json:"accept,srting" mapstructure:"accept"`
-	AcceptEncoding                 string  `json:"accept-encoding,srting" mapstructure:"accept-encoding"`
-	Origin                         string  `json:"origin,srting" mapstructure:"origin"`
-	Referer                        string  `json:"referer,srting" mapstructure:"referer"`
-	UpgradeInsecureRequests        string   `json:"upgrade-insecure-requests,srting" mapstructure:"upgrade-insecure-requests"`
-	AcceptLanguage                 string  `json:"accept-language,srting" mapstructure:"accept-language"`
-	RawRespHeadersconnection       string  `json:"raw_resp_headersconnection,srting" mapstructure:"raw_resp_headersconnection"`
-	RawRespHeaderscontentEncoding  string  `json:"raw_resp_headerscontent-encoding,srting" mapstructure:"raw_resp_headerscontent-encoding"`
-	RawRespHeaderscontentType      string  `json:"raw_resp_headerscontent-type,srting" mapstructure:"raw_resp_headerscontent-type"`
-	RawRespHeaderstransferEncoding string  `json:"raw_resp_headerstransfer-encoding,srting" mapstructure:"raw_resp_headerstransfer-encoding"`
-	RequestID                      string  `json:"request_id,srting" mapstructure:"request_id,srting"`
-	RequestTime                    string  `json:"request_time,srting" mapstructure:"request_time"`
-	Scheme                         string  `json:"scheme,srting" mapstructure:"scheme"`
-	SrcIP                          string  `json:"src_ip,srting" mapstructure:"src_ip"`
-	SslCiphers                     string  `json:"ssl_ciphers,srting" mapstructure:"ssl_ciphers"`
-	SslProtocol                    string  `json:"ssl_protocol,srting" mapstructure:"ssl_protocol"`
-	Status                         string   `json:"status,srting" mapstructure:"status"`
+	RequestUuid                    string  `json:"request_uuid,srting" mapstructure:"request_uuid"`
+	WafNodeUUID                    string  `json:"waf_node_uuid,srting" mapstructure:"waf_node_uuid"`
+	BytesSent                      string   `json:"bytes_sent,srting" mapstructure:"bytes_sent"`
+	BytesReceived                  string   `json:"bytes_received,srting" mapstructure:"bytes_received"`
 	UpstreamAddr                   string  `json:"upstream_addr,srting" mapstructure:"upstream_addr"`
 	UpstreamBytesReceived          string   `json:"upstream_bytes_received,srting" mapstructure:"upstream_bytes_received"`
-	UpstreamBytesSent              string   `json:"upstream_bytes_sent,srting" mapstructure:"upstream_bytes_sent"`
 	UpstreamResponseTime           string `json:"upstream_response_time,srting" mapstructure:"upstream_response_time"`
+	UpstreamBytesSent              string   `json:"upstream_bytes_sent,srting" mapstructure:"upstream_bytes_sent"`
 	UpstreamStatus                 string  `json:"upstream_status,srting" mapstructure:"upstream_status"`
-	URI                            string  `json:"uri,srting" mapstructure:"uri"`
+	Status                         string   `json:"status,srting" mapstructure:"status"`
+	ProcessTime                    float64 `json:"process_time,srting" mapstructure:"process_time"`
+	RequestTime                    string  `json:"request_time,srting" mapstructure:"request_time"`
+	RawHeaders                     string  `json:"raw_headers,srting" mapstructure:"raw_headers"`
+	Scheme                         string  `json:"scheme,srting" mapstructure:"scheme"`
 	Version                        string  `json:"version,srting" mapstructure:"version"`
-	WafAction                      string  `json:"waf_action,srting" mapstructure:"waf_action"`
-	WafExtra                       string  `json:"waf_extra,srting" mapstructure:"waf_extra"`
+	URI                            string  `json:"uri,srting" mapstructure:"uri"`
+	Method                         string  `json:"method,srting" mapstructure:"method"`
+	QueryString                    string  `json:"query_string,srting" mapstructure:"query_string"`
+	RawBody                        string  `json:"raw_body,srting" mapstructure:"raw_body"`
+	SrcIP                          string  `json:"src_ip,srting" mapstructure:"src_ip"`
+	UserAgent                      string  `json:"user_agent,srting" mapstructure:"user_agent"`
+	ContentLength                  string   `json:"content_length,srting" mapstructure:"content_length"`
+	Cookie                         string  `json:"cookie,srting" mapstructure:"cookie"`
+	Referer                        string  `json:"referer,srting" mapstructure:"referer"`
+	ContentType                    string  `json:"content_type,srting" mapstructure:"content_type"`
+	RawRespHeaders                 string  `json:"raw_resp_headers,srting" mapstructure:"raw_resp_headers"`
+	RawRespBody                    string  `json:"raw_resp_body,srting" mapstructure:"raw_resp_body"`
+	Longitude                      string  `json:"longitude,srting" mapstructure:"longitude"`
+	Latitude                       string  `json:"latitude,srting" mapstructure:"latitude"`
 	WafModule                      string  `json:"waf_module,srting" mapstructure:"waf_module"`
-	WafNodeUUID                    string  `json:"waf_node_uuid,srting" mapstructure:"waf_node_uuid"`
 	WafPolicy                      string  `json:"waf_policy,srting" mapstructure:"waf_policy"`
-	XForwardedFor                  string  `json:"x_forwarded_for,srting" mapstructure:"x_forwarded_for"`	
-	parsplug.IpGeo
+	WafAction                      string  `json:"waf_action,srting" mapstructure:"waf_action"`
+	WafExtra                       string  `json:"waf_extra,srting" mapstructure:"waf_extra"`	
 }
 
 type TcpCon struct {
