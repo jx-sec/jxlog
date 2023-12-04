@@ -74,6 +74,7 @@ type JxLog struct {
 	RawRespBody                    string  `json:"raw_resp_body,string" mapstructure:"raw_resp_body"`
 	Longitude                      string  `json:"longitude,string" mapstructure:"longitude"`
 	Latitude                       string  `json:"latitude,string" mapstructure:"latitude"`
+	IsoCode                        string  `json:"iso_code,string" mapstructure:"iso_code"`
 	WafModule                      string  `json:"waf_module,string" mapstructure:"waf_module"`
 	WafPolicy                      string  `json:"waf_policy,string" mapstructure:"waf_policy"`
 	WafAction                      string  `json:"waf_action,string" mapstructure:"waf_action"`
@@ -121,6 +122,7 @@ CREATE TABLE  IF NOT EXISTS ` + Table + `   (
 	RawRespBody String,
 	Longitude String,
 	Latitude String,
+        IsoCode  String,
 	WafModule String,
 	WafPolicy String,
 	WafAction String,
