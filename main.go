@@ -130,7 +130,7 @@ CREATE TABLE  IF NOT EXISTS ` + Table + `   (
 ) ENGINE = MergeTree()
 PARTITION BY toYYYYMM(toDateTime64(RequestTime,0))
 ORDER BY (toDateTime64(RequestTime,0))
-TTL toDateTime64(RequestTime,0) + INTERVAL 180 DAY
+TTL toDateTime(RequestTime) + INTERVAL 180 DAY
 `
 	var (
 		ctx       = context.Background()
