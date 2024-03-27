@@ -9,7 +9,7 @@ services:
       CLICKHOUSE_USER: jxlog
       CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
       CLICKHOUSE_PASSWORD: jxlog
-     volumes:
+    volumes:
        - /opt:/var/lib/clickhouse
     restart: always
 
