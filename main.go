@@ -57,7 +57,7 @@ type JxLog struct {
 	Scheme                         string  `json:"scheme,string" mapstructure:"scheme"`
 	Version                        string  `json:"version,string" mapstructure:"version"`
 	URI                            string  `json:"uri,string" mapstructure:"uri"`
-	RequestUri                    string  `json:"uri,string" mapstructure:"request_uri"`
+	RequestUri                     string  `json:"request_uri,string" mapstructure:"request_uri"`
 	Method                         string  `json:"method,string" mapstructure:"method"`
 	QueryString                    string  `json:"query_string,string" mapstructure:"query_string"`
 	RawBody                        string  `json:"raw_body,string" mapstructure:"raw_body"`
@@ -67,7 +67,7 @@ type JxLog struct {
 	RawRespHeaders                 string  `json:"raw_resp_headers,string" mapstructure:"raw_resp_headers"`
 	RawRespBody                    string  `json:"raw_resp_body,string" mapstructure:"raw_resp_body"`
 	IsoCode                        string  `json:"iso_code,string" mapstructure:"iso_code"`
-	City                        string  `json:"iso_code,string" mapstructure:"city"`
+	City                           string  `json:"city,string" mapstructure:"city"`
 	WafModule                      string  `json:"waf_module,string" mapstructure:"waf_module"`
 	WafPolicy                      string  `json:"waf_policy,string" mapstructure:"waf_policy"`
 	WafAction                      string  `json:"waf_action,string" mapstructure:"waf_action"`
