@@ -47,12 +47,8 @@ type JxLog struct {
 	Host                           string  `json:"host,string" mapstructure:"host"`
 	RequestUuid                    string  `json:"request_uuid,string" mapstructure:"request_uuid"`
 	WafNodeUUID                    string  `json:"waf_node_uuid,string" mapstructure:"waf_node_uuid"`
-	BytesSent                      string  `json:"bytes_sent,string" mapstructure:"bytes_sent"`
-	BytesReceived                  string  `json:"bytes_received,string" mapstructure:"bytes_received"`
 	UpstreamAddr                   string  `json:"upstream_addr,string" mapstructure:"upstream_addr"`
-	UpstreamBytesReceived          string  `json:"upstream_bytes_received,string" mapstructure:"upstream_bytes_received"`
 	UpstreamResponseTime           string  `json:"upstream_response_time,string" mapstructure:"upstream_response_time"`
-	UpstreamBytesSent              string  `json:"upstream_bytes_sent,string" mapstructure:"upstream_bytes_sent"`
 	UpstreamStatus                 string  `json:"upstream_status,string" mapstructure:"upstream_status"`
 	Status                         string  `json:"status,string" mapstructure:"status"`
 	ProcessTime                    string  `json:"process_time,string" mapstructure:"process_time"`
@@ -61,20 +57,17 @@ type JxLog struct {
 	Scheme                         string  `json:"scheme,string" mapstructure:"scheme"`
 	Version                        string  `json:"version,string" mapstructure:"version"`
 	URI                            string  `json:"uri,string" mapstructure:"uri"`
+	RequestUri                    string  `json:"uri,string" mapstructure:"request_uri"`
 	Method                         string  `json:"method,string" mapstructure:"method"`
 	QueryString                    string  `json:"query_string,string" mapstructure:"query_string"`
 	RawBody                        string  `json:"raw_body,string" mapstructure:"raw_body"`
 	SrcIP                          string  `json:"src_ip,string" mapstructure:"src_ip"`
 	UserAgent                      string  `json:"user_agent,string" mapstructure:"user_agent"`
-	ContentLength                  string  `json:"content_length,string" mapstructure:"content_length"`
 	Cookie                         string  `json:"cookie,string" mapstructure:"cookie"`
-	Referer                        string  `json:"referer,string" mapstructure:"referer"`
-	ContentType                    string  `json:"content_type,string" mapstructure:"content_type"`
 	RawRespHeaders                 string  `json:"raw_resp_headers,string" mapstructure:"raw_resp_headers"`
 	RawRespBody                    string  `json:"raw_resp_body,string" mapstructure:"raw_resp_body"`
-	Longitude                      string  `json:"longitude,string" mapstructure:"longitude"`
-	Latitude                       string  `json:"latitude,string" mapstructure:"latitude"`
 	IsoCode                        string  `json:"iso_code,string" mapstructure:"iso_code"`
+	City                        string  `json:"iso_code,string" mapstructure:"city"`
 	WafModule                      string  `json:"waf_module,string" mapstructure:"waf_module"`
 	WafPolicy                      string  `json:"waf_policy,string" mapstructure:"waf_policy"`
 	WafAction                      string  `json:"waf_action,string" mapstructure:"waf_action"`
@@ -95,12 +88,8 @@ CREATE TABLE  IF NOT EXISTS ` + Table + `   (
 	Host String,
 	RequestUuid String,
 	WafNodeUUID String,
-	BytesSent String,
-	BytesReceived String,
 	UpstreamAddr String,
-	UpstreamBytesReceived String,
 	UpstreamResponseTime String,
-	UpstreamBytesSent String,
 	UpstreamStatus String,
 	Status String,
 	ProcessTime String,
@@ -114,15 +103,11 @@ CREATE TABLE  IF NOT EXISTS ` + Table + `   (
 	RawBody String,
 	SrcIP String,
 	UserAgent String,
-	ContentLength String,
 	Cookie String,
-	Referer String,
-	ContentType String,
 	RawRespHeaders String,
 	RawRespBody String,
-	Longitude String,
-	Latitude String,
         IsoCode  String,
+	City  String,
 	WafModule String,
 	WafPolicy String,
 	WafAction String,
