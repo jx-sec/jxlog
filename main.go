@@ -127,7 +127,7 @@ TTL toDateTime(RequestTime) + INTERVAL 180 DAY
 				Password: Password,
 			},
 			//Debug:           true,
-			DialTimeout:     time.Second,
+			DialTimeout:     5 * time.Second,
 			MaxOpenConns:    10,
 			MaxIdleConns:    5,
 			ConnMaxLifetime: time.Hour,
