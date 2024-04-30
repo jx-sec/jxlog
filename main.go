@@ -98,6 +98,7 @@ CREATE TABLE  IF NOT EXISTS ` + Table + `   (
 	Scheme String,
 	Version String,
 	URI String,
+        RequestUri String,
 	Method String,
 	QueryString String,
 	RawBody String,
