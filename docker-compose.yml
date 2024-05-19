@@ -9,12 +9,12 @@ services:
       CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
       CLICKHOUSE_PASSWORD: jxlog
     volumes:
-       - /opt/jxlog/clickhouse:/var/lib/clickhouse
+      - /opt/jxwaf_data/clickhouse:/var/lib/clickhouse
     restart: always
 
   jxlog:
     container_name: jxlog
-    image: "jxwaf/jxlog:V4.4"
+    image: "jxwaf/jxlog:v4.1"
     ports:
       - "8877:8877"
     environment:
@@ -24,6 +24,5 @@ services:
       PASSWORD: jxlog
       TCPSERVER: 0.0.0.0
     depends_on:
-      clickhouse:
-        condition: service_started  
+      - clickhouse
     restart: always
