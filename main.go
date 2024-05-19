@@ -6,21 +6,11 @@ import (
 	"context"
 	"encoding/json"
 	"io"
-
-	// "io"
-
-	// "fmt"
-
-	// "io"
 	"bytes"
 	"log"
 	"net"
 	"os"
 	"time"
-
-	// "strconv"
-	"jxlog/parsplug"
-
 	"github.com/ClickHouse/clickhouse-go/v2"
 	"github.com/mitchellh/mapstructure"
 )
@@ -54,51 +44,34 @@ var (
 )
 
 type JxLog struct {
-	BytesReceived                  string   `json:"bytes_received,srting" mapstructure:"bytes_received"`
-	BytesSent                      string   `json:"bytes_sent,srting" mapstructure:"bytes_sent"`
-	ConnectionsActive              string   `json:"connections_active,srting" mapstructure:"connections_active"`
-	ConnectionsWaiting             string   `json:"connections_waiting,srting" mapstructure:"connections_waiting"`
-	ContentLength                  string   `json:"content_length,srting" mapstructure:"content_length"`
-	ContentType                    string  `json:"content_type,srting" mapstructure:"content_type"`
-	Cookie                         string  `json:"cookie,srting" mapstructure:"cookie"`
-	Host                           string  `json:"host,srting" mapstructure:"host"`
-	Method                         string  `json:"method,srting" mapstructure:"method"`
-	ProcessTime                    float64 `json:"process_time,srting" mapstructure:"process_time"`
-	QueryString                    string  `json:"query_string,srting" mapstructure:"query_string"`
-	RawBody                        string  `json:"raw_body,srting" mapstructure:"raw_body"`
-	RawHeaders                     string  `json:"raw_headers,srting" mapstructure:"raw_headers"`
-	UserAgent                      string  `json:"user-agent,srting" mapstructure:"user-agent"`
-	Accept                         string  `json:"accept,srting" mapstructure:"accept"`
-	AcceptEncoding                 string  `json:"accept-encoding,srting" mapstructure:"accept-encoding"`
-	Origin                         string  `json:"origin,srting" mapstructure:"origin"`
-	Referer                        string  `json:"referer,srting" mapstructure:"referer"`
-	UpgradeInsecureRequests        string   `json:"upgrade-insecure-requests,srting" mapstructure:"upgrade-insecure-requests"`
-	AcceptLanguage                 string  `json:"accept-language,srting" mapstructure:"accept-language"`
-	RawRespHeadersconnection       string  `json:"raw_resp_headersconnection,srting" mapstructure:"raw_resp_headersconnection"`
-	RawRespHeaderscontentEncoding  string  `json:"raw_resp_headerscontent-encoding,srting" mapstructure:"raw_resp_headerscontent-encoding"`
-	RawRespHeaderscontentType      string  `json:"raw_resp_headerscontent-type,srting" mapstructure:"raw_resp_headerscontent-type"`
-	RawRespHeaderstransferEncoding string  `json:"raw_resp_headerstransfer-encoding,srting" mapstructure:"raw_resp_headerstransfer-encoding"`
-	RequestID                      string  `json:"request_id,srting" mapstructure:"request_id,srting"`
-	RequestTime                    string  `json:"request_time,srting" mapstructure:"request_time"`
-	Scheme                         string  `json:"scheme,srting" mapstructure:"scheme"`
-	SrcIP                          string  `json:"src_ip,srting" mapstructure:"src_ip"`
-	SslCiphers                     string  `json:"ssl_ciphers,srting" mapstructure:"ssl_ciphers"`
-	SslProtocol                    string  `json:"ssl_protocol,srting" mapstructure:"ssl_protocol"`
-	Status                         string   `json:"status,srting" mapstructure:"status"`
-	UpstreamAddr                   string  `json:"upstream_addr,srting" mapstructure:"upstream_addr"`
-	UpstreamBytesReceived          string   `json:"upstream_bytes_received,srting" mapstructure:"upstream_bytes_received"`
-	UpstreamBytesSent              string   `json:"upstream_bytes_sent,srting" mapstructure:"upstream_bytes_sent"`
-	UpstreamResponseTime           string `json:"upstream_response_time,srting" mapstructure:"upstream_response_time"`
-	UpstreamStatus                 string  `json:"upstream_status,srting" mapstructure:"upstream_status"`
-	URI                            string  `json:"uri,srting" mapstructure:"uri"`
-	Version                        string  `json:"version,srting" mapstructure:"version"`
-	WafAction                      string  `json:"waf_action,srting" mapstructure:"waf_action"`
-	WafExtra                       string  `json:"waf_extra,srting" mapstructure:"waf_extra"`
-	WafModule                      string  `json:"waf_module,srting" mapstructure:"waf_module"`
-	WafNodeUUID                    string  `json:"waf_node_uuid,srting" mapstructure:"waf_node_uuid"`
-	WafPolicy                      string  `json:"waf_policy,srting" mapstructure:"waf_policy"`
-	XForwardedFor                  string  `json:"x_forwarded_for,srting" mapstructure:"x_forwarded_for"`	
-	parsplug.IpGeo
+	Host                           string  `json:"host,string" mapstructure:"host"`
+	RequestUuid                    string  `json:"request_uuid,string" mapstructure:"request_uuid"`
+	WafNodeUUID                    string  `json:"waf_node_uuid,string" mapstructure:"waf_node_uuid"`
+	UpstreamAddr                   string  `json:"upstream_addr,string" mapstructure:"upstream_addr"`
+	UpstreamResponseTime           string  `json:"upstream_response_time,string" mapstructure:"upstream_response_time"`
+	UpstreamStatus                 string  `json:"upstream_status,string" mapstructure:"upstream_status"`
+	Status                         string  `json:"status,string" mapstructure:"status"`
+	ProcessTime                    string  `json:"process_time,string" mapstructure:"process_time"`
+	RequestTime                    string  `json:"request_time,string" mapstructure:"request_time"`
+	RawHeaders                     string  `json:"raw_headers,string" mapstructure:"raw_headers"`
+	Scheme                         string  `json:"scheme,string" mapstructure:"scheme"`
+	Version                        string  `json:"version,string" mapstructure:"version"`
+	URI                            string  `json:"uri,string" mapstructure:"uri"`
+	RequestUri                     string  `json:"request_uri,string" mapstructure:"request_uri"`
+	Method                         string  `json:"method,string" mapstructure:"method"`
+	QueryString                    string  `json:"query_string,string" mapstructure:"query_string"`
+	RawBody                        string  `json:"raw_body,string" mapstructure:"raw_body"`
+	SrcIP                          string  `json:"src_ip,string" mapstructure:"src_ip"`
+	UserAgent                      string  `json:"user_agent,string" mapstructure:"user_agent"`
+	Cookie                         string  `json:"cookie,string" mapstructure:"cookie"`
+	RawRespHeaders                 string  `json:"raw_resp_headers,string" mapstructure:"raw_resp_headers"`
+	RawRespBody                    string  `json:"raw_resp_body,string" mapstructure:"raw_resp_body"`
+	IsoCode                        string  `json:"iso_code,string" mapstructure:"iso_code"`
+	City                           string  `json:"city,string" mapstructure:"city"`
+	WafModule                      string  `json:"waf_module,string" mapstructure:"waf_module"`
+	WafPolicy                      string  `json:"waf_policy,string" mapstructure:"waf_policy"`
+	WafAction                      string  `json:"waf_action,string" mapstructure:"waf_action"`
+	WafExtra                       string  `json:"waf_extra,string" mapstructure:"waf_extra"`	
 }
 
 type TcpCon struct {
@@ -110,60 +83,40 @@ type ClickHouse struct {
 
 
 func Clickhouse_conn(Clickhouse string, Database string, Username string, Password string) *ClickHouse {
-	ddl := `
-	CREATE TABLE  IF NOT EXISTS ` + Table + `   (
-		BytesReceived String,
-		BytesSent String,
-		ConnectionsActive String,
-		ConnectionsWaiting String,
-		ContentLength String,
-		ContentType String,
-		Cookie String,
-		Host String,
-		Method String,
-		ProcessTime Float64,
-		QueryString String,
-		RawBody String,
-		RawHeaders String,
-		UserAgent String,
-		Accept String,
-		AcceptEncoding String,
-		Origin String,
-		Referer String,
-		UpgradeInsecureRequests String,
-		AcceptLanguage String,
-		RawRespHeadersconnection String,
-		RawRespHeaderscontentEncoding String,
-		RawRespHeaderscontentType String,
-		RawRespHeaderstransferEncoding String,
-		RequestID String,
-		RequestTime String,
-		Scheme String,
-		SrcIP String,
-		SslCiphers String,
-		SslProtocol String,
-		Status String,
-		UpstreamAddr String,
-		UpstreamBytesReceived String,
-		UpstreamBytesSent String,
-		UpstreamResponseTime String,
-		UpstreamStatus String,
-		URI String,
-		Version String,
-		WafAction String,
-		WafExtra String,
-		WafModule String,
-		WafNodeUUID String,
-		WafPolicy String,
-		XForwardedFor String,
-		CityName String,
-		CountryName String,
-		Province String,
-		IsAnonymousProxy String,
-		Location String
+ddl := `
+CREATE TABLE  IF NOT EXISTS ` + Table + `   (
+	Host String,
+	RequestUuid String,
+	WafNodeUUID String,
+	UpstreamAddr String,
+	UpstreamResponseTime String,
+	UpstreamStatus String,
+	Status String,
+	ProcessTime String,
+	RequestTime String,
+	RawHeaders String,
+	Scheme String,
+	Version String,
+	URI String,
+        RequestUri String,
+	Method String,
+	QueryString String,
+	RawBody String,
+	SrcIP String,
+	UserAgent String,
+	Cookie String,
+	RawRespHeaders String,
+	RawRespBody String,
+        IsoCode  String,
+	City  String,
+	WafModule String,
+	WafPolicy String,
+	WafAction String,
+	WafExtra String
 ) ENGINE = MergeTree()
 PARTITION BY toYYYYMM(toDateTime64(RequestTime,0))
 ORDER BY (toDateTime64(RequestTime,0))
+TTL toDateTime(RequestTime) + INTERVAL 180 DAY
 `
 	var (
 		ctx       = context.Background()
@@ -175,7 +128,7 @@ ORDER BY (toDateTime64(RequestTime,0))
 				Password: Password,
 			},
 			//Debug:           true,
-			DialTimeout:     time.Second,
+			DialTimeout:     5 * time.Second,
 			MaxOpenConns:    10,
 			MaxIdleConns:    5,
 			ConnMaxLifetime: time.Hour,
@@ -220,11 +173,7 @@ func JxlogHandle(data []byte)  JxLog{
 	if err != nil {
 		log.Print("decode err : ",err)
 	}
-	// log.Print(jxlog)
-	if parsplug.Geodb !=nil {
-		jxlog.IpGeo = parsplug.GeoPlug(jxlog.SrcIP,parsplug.Geodb)
-		return jxlog
-	}
+	
 	return jxlog
 }
 
@@ -277,119 +226,54 @@ func contentConn(jsonBuf []byte,click *ClickHouse) {
 }
 	
 
-func handleConn(con net.Conn,click *ClickHouse)  {
+func handleConn(con net.Conn, click *ClickHouse) {
+	defer con.Close() // 确保连接被关闭
 	reader := bufio.NewReader(con)
-	// reader := bufio.NewReaderSize(con,16)
-	var jsonBuf bytes.Buffer    //buff full 处理
+	var jsonBuf bytes.Buffer // 使用 bytes.Buffer 替代 []byte 以更高效地处理字符串
+
 	for {
-		// data, err := reader.ReadSlice('\n')
-		data,isPrefix, err := reader.ReadLine()
-		if len(data) > 0{
-            jsonBuf.Write(data)
-            if !isPrefix{
-                contentConn(jsonBuf.Bytes(),click)
-                jsonBuf.Reset()
-            }
-        }
-		if err != nil{
-			if err == io.EOF {
-				break
-			}else{
-				log.Println(err)
-				break
+		line, isPrefix, err := reader.ReadLine()
+		if len(line) > 0 {
+			jsonBuf.Write(line)
+			if !isPrefix {
+				// 当一行被完全读取，处理缓冲区中的数据
+				contentConn(jsonBuf.Bytes(), click)
+				jsonBuf.Reset() // 重置缓冲区
 			}
-            
-        }
-		// jsonBuf.Write(data)
-		// if !isPrefix {
-		// 	contentConn(jsonBuf.Bytes(),click)
-		// 	break
-		// }
-		
-		// log.Println("full ",bufio.ErrBufferFull)
-		// if err == bufio.ErrBufferFull{
-		// 	jsonBuf.Write(data)
-		// 	log.Println("命中full")
-		// 	println(jsonBuf.String())
-		// }
-		// if (err != nil ) && (err != bufio.ErrBufferFull) && (err != io.EOF) {
-		// 	log.Println("命中err",err)
-		// 	break
-		// }else {
-		// 	log.Println("biof  errr",string(jsonBuf.Bytes()))
-		// 	if err := click.Sendclickhous(jsonBuf.Bytes()); err != nil {
-		// 		log.Print("send clickhouse err : ", err)
-		// 	}
-		// 	jsonBuf.Reset()
-		// }
-
-		// if err != nil {
-		// 	if err != io.EOF {
-		// 		log.Println(err)
-		// 	} else {
-		// 		break
-		// 	}
-		// }
-		// jxlog := JxlogHandle(data)
-
-		// log.Println("biof  errr",string(data))
-		// if err := click.Sendclickhous(data); err != nil {
-		// 	log.Print("send clickhouse err : ", err)
-		// }
-		
-		// log.Println("received msg", len(data), "bytes:", string(data))
-		
+		}
+		if err != nil {
+			if err != io.EOF {
+				log.Printf("Error reading from connection: %v", err)
+			}
+			return // 终止循环并关闭连接
+		}
 	}
-	
-	// return jsonBuf.Bytes()
 }
 
-func (ter TcpCon) Start()() {
-	// setLimit()
+func (ter TcpCon) Start() {
 	click := Clickhouse_conn(Clickhouse, Database, Username, Password)
-	tcpcon := TcpServer + ":" + TcpPort
-	ln, err := net.Listen("tcp", tcpcon)
+	listener, err := net.Listen("tcp", TcpServer+":"+TcpPort)
 	if err != nil {
-		panic(err)
-	}else{
-		log.Print("tcp server start ...")
+		log.Fatalf("Failed to start TCP listener: %v", err)
 	}
+	defer listener.Close() // 确保监听器被关闭
 
-	var connections []net.Conn
-	defer func() {
-		for _, conn := range connections {
-			conn.Close()
-		}
-	}()
-
+	log.Printf("TCP server started on %s:%s", TcpServer, TcpPort)
 	for {
-		conn, e := ln.Accept()
-		if e != nil {
-			if ne, ok := e.(net.Error); ok && ne.Temporary() {
-				log.Printf("accept temp err: %v", ne)
+		conn, err := listener.Accept()
+		if err != nil {
+			if netErr, ok := err.(net.Error); ok && netErr.Temporary() {
+				log.Printf("Temporary error accepting connection: %v", netErr)
 				continue
 			}
-	
-			log.Printf("accept err: %v", e)
-			return
+			log.Fatalf("Error accepting connection: %v", err)
 		}
-
-		go handleConn(conn,click)
-		connections = append(connections, conn)
-		if len(connections)%100 == 0 {
-			log.Printf("total number of connections: %v", len(connections))
-		}
+		go handleConn(conn, click) // 使用协程处理新的连接
 	}
 }
 
 func main() {
-	// JxLog. := parsplug.GeoPlug("81.2.69.142",parsplug.Geodb)
-	// log.Println(ipgeo)
-	err := parsplug.GeodbReadInit()
-	if err != nil {
-		log.Println(parsplug.Geodb)
-		log.Println(err)
-	}
+
 	t := TcpCon{}
 	t.Start()
 	

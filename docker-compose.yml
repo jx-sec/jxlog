@@ -1,7 +1,20 @@
-version: "3.9"
 services:
+  clickhouse:
+    image: "clickhouse/clickhouse-server:22.8.5-alpine"
+    ports:
+      - "9000:9000"
+    environment:
+      CLICKHOUSE_DB: jxwaf
+      CLICKHOUSE_USER: jxlog
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+      CLICKHOUSE_PASSWORD: jxlog
+    volumes:
+       - /opt/jxlog/clickhouse:/var/lib/clickhouse
+    restart: always
+
   jxlog:
-    image: "hkccr.ccs.tencentyun.com/jxwaf/jxlog:v1_debug"
+    container_name: jxlog
+    image: "jxwaf/jxlog:V4.4"
     ports:
       - "8877:8877"
     environment:
@@ -10,13 +23,7 @@ services:
       USERNAME: jxlog
       PASSWORD: jxlog
       TCPSERVER: 0.0.0.0
+    depends_on:
+      clickhouse:
+        condition: service_started  
     restart: always
-  clickhouse:
-    image: "clickhouse/clickhouse-server:latest"
-    environment:
-      CLICKHOUSE_DB: jxwaf
-      CLICKHOUSE_USER: jxlog
-      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
-      CLICKHOUSE_PASSWORD: jxlog
-    restart: always
-
