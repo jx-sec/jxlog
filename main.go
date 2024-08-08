@@ -71,7 +71,8 @@ type JxLog struct {
 	WafModule                      string  `json:"waf_module,string" mapstructure:"waf_module"`
 	WafPolicy                      string  `json:"waf_policy,string" mapstructure:"waf_policy"`
 	WafAction                      string  `json:"waf_action,string" mapstructure:"waf_action"`
-	WafExtra                       string  `json:"waf_extra,string" mapstructure:"waf_extra"`	
+	WafExtra                       string  `json:"waf_extra,string" mapstructure:"waf_extra"`
+	JxwafDevid                     string  `json:"jxwaf_devid,string" mapstructure:"jxwaf_devid"`
 }
 
 type TcpCon struct {
@@ -112,7 +113,8 @@ CREATE TABLE  IF NOT EXISTS ` + Table + `   (
 	WafModule String,
 	WafPolicy String,
 	WafAction String,
-	WafExtra String
+	WafExtra String,
+        JxwafDevid String
 ) ENGINE = MergeTree()
 PARTITION BY toYYYYMM(toDateTime64(RequestTime,0))
 ORDER BY (toDateTime64(RequestTime,0))
