@@ -72,7 +72,7 @@ type JxLog struct {
 	WafPolicy                      string  `json:"waf_policy,string" mapstructure:"waf_policy"`
 	WafAction                      string  `json:"waf_action,string" mapstructure:"waf_action"`
 	WafExtra                       string  `json:"waf_extra,string" mapstructure:"waf_extra"`
-	JxwafDevid                     string  `json:"jxwaf_devid,string" mapstructure:"jxwaf_devid"`,
+	JxwafDevid                     string  `json:"jxwaf_devid,string" mapstructure:"jxwaf_devid"`
 	RawSrcIP		       string  `json:"raw_src_ip,string" mapstructure:"raw_src_ip"`
 }
 
